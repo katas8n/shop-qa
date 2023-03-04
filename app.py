@@ -69,6 +69,12 @@ def money_transfer (account) :
     card_date = input("Enter your card date : ")
     card_cvv = input("Enter your card cvv : ")
 
+    # card number must consist of 15 symbols
+    # card date must includes "/"
+    # card_cvv must consist of 3 symbols
+
+    # if error => print error into the console
+
     money = input("How much money do you want to send? : ")
 
     account['balance'] = int(account['balance']) + int(money)
