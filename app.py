@@ -27,15 +27,61 @@ def is_exit():
     result = input("Do you wanna quit ? y/n : ")
     return result.lower()
 
+def registration (login , password , balance = 0):
+    return {
+        "login" : login,
+        "password" : password,
+        "balance": balance
+    }
+
 def show_products (list_of_products):
     for product in list_of_products:
         print("\n")
         print("***********************" + product['label'] + "***********************\n")
 
         for key , value in product.items() :
-            if key == "date" : continue
+            if key == "date":
+                print(key + " ====> " + str(value))
+                continue
+
             print(key + " ====> " + value)
 
+def auth (login,array_of_users) :
+    for user in array_of_users :
+        if login in user['login'] :
+
+            password = input("Enter your account's password : ")
+
+            if password == user['password'] :
+                return [user , True]
+
+            else :
+                print("Incorrect password")
+
+        else:
+            print("Incorrect login")
+
+def get_balance (account) :
+    print("[USER_BALANCE]", account['balance'], "Y.E.")
+
+def money_transfer (account) :
+    card_number = input("Enter your card number : ")
+    card_date = input("Enter your card date : ")
+    card_cvv = input("Enter your card cvv : ")
+
+    money = input("How much money do you want to send? : ")
+
+    account['balance'] = int(account['balance']) + int(money)
+    print(f"Congratulations now your balance is : {str(account['balance'])} y.e")
+
+def buy_car (target , list_of_products) :
+    for product in list_of_products:
+        if target.lower() == product['label'].lower():
+            sliced_price = product['price'].find("y")
+
+            current_user['balance'] = current_user['balance'] - int(product['price'][:sliced_price - 1])
+
+    print(f"After you bought the car there is left {str(current_user['balance'])} on your balance")
 
 products = [
     {
@@ -86,6 +132,16 @@ is_running = True
 
 is_registred = False
 
+users = [
+    {
+        "login" : "admin",
+        "password" : "admin",
+        "balance" : "1200"
+    }
+]
+
+current_user = {}
+
 while is_running :
     user_choose = input("""
         a) Show products 
@@ -99,6 +155,52 @@ while is_running :
 
     if user_choose == "a" :
         show_products(products)
+
+    elif user_choose == "b":
+        show_products(products)
+
+        prefer_car = input("Choose car that you want buy")
+
+        buy_car(prefer_car ,products)
+
+    elif user_choose == "c":
+        login = input("Enter login that you want to use continuously : ")
+        password = input("Enter your password : ")
+
+        user = registration(login ,password)
+
+        users.append(user)
+        print(users)
+
+    elif user_choose == "d":
+        login = input("Enter your account's login : ")
+
+        result = auth(login  ,users)
+        current_user , is_registred = result
+        print(current_user)
+        print(is_registred)
+
+    elif user_choose == "e":
+
+        if not is_registred :
+            print("Error!")
+            continue
+
+        user_choose = input("""
+            1) Look at bill
+            2) Transfer by card 
+        """)
+
+        if user_choose == "1" :
+
+            if is_registred == True :
+                get_balance(current_user)
+
+            else :
+                print("You should to have an account to look at balance")
+
+        elif  user_choose == "2":
+            money_transfer(current_user)
 
     elif user_choose == "q":
         result = is_exit()
